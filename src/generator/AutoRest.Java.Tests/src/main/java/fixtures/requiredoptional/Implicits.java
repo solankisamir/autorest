@@ -14,8 +14,7 @@ import com.microsoft.rest.ServiceCall;
 import com.microsoft.rest.ServiceCallback;
 import com.microsoft.rest.ServiceResponse;
 import fixtures.requiredoptional.models.Error;
-import fixtures.requiredoptional.models.ErrorException;
-import java.io.IOException;
+import rx.Observable;
 
 /**
  * An instance of this class provides access to all the operations defined
@@ -26,188 +25,297 @@ public interface Implicits {
      * Test implicitly required path parameter.
      *
      * @param pathParameter the String value
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @throws IllegalArgumentException exception thrown from invalid parameters
-     * @return the Error object wrapped in {@link ServiceResponse} if successful.
+     * @return the Error object if successful.
      */
-    ServiceResponse<Error> getRequiredPath(String pathParameter) throws ErrorException, IOException, IllegalArgumentException;
+    Error getRequiredPath(String pathParameter);
 
     /**
      * Test implicitly required path parameter.
      *
      * @param pathParameter the String value
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall getRequiredPathAsync(String pathParameter, final ServiceCallback<Error> serviceCallback) throws IllegalArgumentException;
-
-    /**
-     * Test implicitly optional query parameter.
-     *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the {@link ServiceResponse} object if successful.
-     */
-    ServiceResponse<Void> putOptionalQuery() throws ErrorException, IOException;
-
-    /**
-     * Test implicitly optional query parameter.
-     *
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
-     * @return the {@link ServiceCall} object
-     */
-    ServiceCall putOptionalQueryAsync(final ServiceCallback<Void> serviceCallback) throws IllegalArgumentException;
-    /**
-     * Test implicitly optional query parameter.
-     *
-     * @param queryParameter the String value
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the {@link ServiceResponse} object if successful.
-     */
-    ServiceResponse<Void> putOptionalQuery(String queryParameter) throws ErrorException, IOException;
-
-    /**
-     * Test implicitly optional query parameter.
-     *
-     * @param queryParameter the String value
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
-     * @return the {@link ServiceCall} object
-     */
-    ServiceCall putOptionalQueryAsync(String queryParameter, final ServiceCallback<Void> serviceCallback) throws IllegalArgumentException;
-
-    /**
-     * Test implicitly optional header parameter.
-     *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the {@link ServiceResponse} object if successful.
-     */
-    ServiceResponse<Void> putOptionalHeader() throws ErrorException, IOException;
-
-    /**
-     * Test implicitly optional header parameter.
-     *
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
-     * @return the {@link ServiceCall} object
-     */
-    ServiceCall putOptionalHeaderAsync(final ServiceCallback<Void> serviceCallback) throws IllegalArgumentException;
-    /**
-     * Test implicitly optional header parameter.
-     *
-     * @param queryParameter the String value
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the {@link ServiceResponse} object if successful.
-     */
-    ServiceResponse<Void> putOptionalHeader(String queryParameter) throws ErrorException, IOException;
-
-    /**
-     * Test implicitly optional header parameter.
-     *
-     * @param queryParameter the String value
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
-     * @return the {@link ServiceCall} object
-     */
-    ServiceCall putOptionalHeaderAsync(String queryParameter, final ServiceCallback<Void> serviceCallback) throws IllegalArgumentException;
-
-    /**
-     * Test implicitly optional body parameter.
-     *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the {@link ServiceResponse} object if successful.
-     */
-    ServiceResponse<Void> putOptionalBody() throws ErrorException, IOException;
-
-    /**
-     * Test implicitly optional body parameter.
-     *
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
-     * @return the {@link ServiceCall} object
-     */
-    ServiceCall putOptionalBodyAsync(final ServiceCallback<Void> serviceCallback) throws IllegalArgumentException;
-    /**
-     * Test implicitly optional body parameter.
-     *
-     * @param bodyParameter the String value
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the {@link ServiceResponse} object if successful.
-     */
-    ServiceResponse<Void> putOptionalBody(String bodyParameter) throws ErrorException, IOException;
-
-    /**
-     * Test implicitly optional body parameter.
-     *
-     * @param bodyParameter the String value
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
-     * @return the {@link ServiceCall} object
-     */
-    ServiceCall putOptionalBodyAsync(String bodyParameter, final ServiceCallback<Void> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Error> getRequiredPathAsync(String pathParameter, final ServiceCallback<Error> serviceCallback);
 
     /**
      * Test implicitly required path parameter.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @throws IllegalArgumentException exception thrown from invalid parameters
-     * @return the Error object wrapped in {@link ServiceResponse} if successful.
+     * @param pathParameter the String value
+     * @return the observable to the Error object
      */
-    ServiceResponse<Error> getRequiredGlobalPath() throws ErrorException, IOException, IllegalArgumentException;
+    Observable<Error> getRequiredPathAsync(String pathParameter);
+
+    /**
+     * Test implicitly required path parameter.
+     *
+     * @param pathParameter the String value
+     * @return the observable to the Error object
+     */
+    Observable<ServiceResponse<Error>> getRequiredPathWithServiceResponseAsync(String pathParameter);
+
+    /**
+     * Test implicitly optional query parameter.
+     *
+     */
+    void putOptionalQuery();
+
+    /**
+     * Test implicitly optional query parameter.
+     *
+     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @return the {@link ServiceCall} object
+     */
+    ServiceCall<Void> putOptionalQueryAsync(final ServiceCallback<Void> serviceCallback);
+
+    /**
+     * Test implicitly optional query parameter.
+     *
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<Void> putOptionalQueryAsync();
+
+    /**
+     * Test implicitly optional query parameter.
+     *
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<ServiceResponse<Void>> putOptionalQueryWithServiceResponseAsync();
+    /**
+     * Test implicitly optional query parameter.
+     *
+     * @param queryParameter the String value
+     */
+    void putOptionalQuery(String queryParameter);
+
+    /**
+     * Test implicitly optional query parameter.
+     *
+     * @param queryParameter the String value
+     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @return the {@link ServiceCall} object
+     */
+    ServiceCall<Void> putOptionalQueryAsync(String queryParameter, final ServiceCallback<Void> serviceCallback);
+
+    /**
+     * Test implicitly optional query parameter.
+     *
+     * @param queryParameter the String value
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<Void> putOptionalQueryAsync(String queryParameter);
+
+    /**
+     * Test implicitly optional query parameter.
+     *
+     * @param queryParameter the String value
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<ServiceResponse<Void>> putOptionalQueryWithServiceResponseAsync(String queryParameter);
+
+    /**
+     * Test implicitly optional header parameter.
+     *
+     */
+    void putOptionalHeader();
+
+    /**
+     * Test implicitly optional header parameter.
+     *
+     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @return the {@link ServiceCall} object
+     */
+    ServiceCall<Void> putOptionalHeaderAsync(final ServiceCallback<Void> serviceCallback);
+
+    /**
+     * Test implicitly optional header parameter.
+     *
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<Void> putOptionalHeaderAsync();
+
+    /**
+     * Test implicitly optional header parameter.
+     *
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<ServiceResponse<Void>> putOptionalHeaderWithServiceResponseAsync();
+    /**
+     * Test implicitly optional header parameter.
+     *
+     * @param queryParameter the String value
+     */
+    void putOptionalHeader(String queryParameter);
+
+    /**
+     * Test implicitly optional header parameter.
+     *
+     * @param queryParameter the String value
+     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @return the {@link ServiceCall} object
+     */
+    ServiceCall<Void> putOptionalHeaderAsync(String queryParameter, final ServiceCallback<Void> serviceCallback);
+
+    /**
+     * Test implicitly optional header parameter.
+     *
+     * @param queryParameter the String value
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<Void> putOptionalHeaderAsync(String queryParameter);
+
+    /**
+     * Test implicitly optional header parameter.
+     *
+     * @param queryParameter the String value
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<ServiceResponse<Void>> putOptionalHeaderWithServiceResponseAsync(String queryParameter);
+
+    /**
+     * Test implicitly optional body parameter.
+     *
+     */
+    void putOptionalBody();
+
+    /**
+     * Test implicitly optional body parameter.
+     *
+     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @return the {@link ServiceCall} object
+     */
+    ServiceCall<Void> putOptionalBodyAsync(final ServiceCallback<Void> serviceCallback);
+
+    /**
+     * Test implicitly optional body parameter.
+     *
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<Void> putOptionalBodyAsync();
+
+    /**
+     * Test implicitly optional body parameter.
+     *
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<ServiceResponse<Void>> putOptionalBodyWithServiceResponseAsync();
+    /**
+     * Test implicitly optional body parameter.
+     *
+     * @param bodyParameter the String value
+     */
+    void putOptionalBody(String bodyParameter);
+
+    /**
+     * Test implicitly optional body parameter.
+     *
+     * @param bodyParameter the String value
+     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @return the {@link ServiceCall} object
+     */
+    ServiceCall<Void> putOptionalBodyAsync(String bodyParameter, final ServiceCallback<Void> serviceCallback);
+
+    /**
+     * Test implicitly optional body parameter.
+     *
+     * @param bodyParameter the String value
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<Void> putOptionalBodyAsync(String bodyParameter);
+
+    /**
+     * Test implicitly optional body parameter.
+     *
+     * @param bodyParameter the String value
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<ServiceResponse<Void>> putOptionalBodyWithServiceResponseAsync(String bodyParameter);
+
+    /**
+     * Test implicitly required path parameter.
+     *
+     * @return the Error object if successful.
+     */
+    Error getRequiredGlobalPath();
 
     /**
      * Test implicitly required path parameter.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall getRequiredGlobalPathAsync(final ServiceCallback<Error> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Error> getRequiredGlobalPathAsync(final ServiceCallback<Error> serviceCallback);
+
+    /**
+     * Test implicitly required path parameter.
+     *
+     * @return the observable to the Error object
+     */
+    Observable<Error> getRequiredGlobalPathAsync();
+
+    /**
+     * Test implicitly required path parameter.
+     *
+     * @return the observable to the Error object
+     */
+    Observable<ServiceResponse<Error>> getRequiredGlobalPathWithServiceResponseAsync();
 
     /**
      * Test implicitly required query parameter.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @throws IllegalArgumentException exception thrown from invalid parameters
-     * @return the Error object wrapped in {@link ServiceResponse} if successful.
+     * @return the Error object if successful.
      */
-    ServiceResponse<Error> getRequiredGlobalQuery() throws ErrorException, IOException, IllegalArgumentException;
+    Error getRequiredGlobalQuery();
 
     /**
      * Test implicitly required query parameter.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall getRequiredGlobalQueryAsync(final ServiceCallback<Error> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Error> getRequiredGlobalQueryAsync(final ServiceCallback<Error> serviceCallback);
+
+    /**
+     * Test implicitly required query parameter.
+     *
+     * @return the observable to the Error object
+     */
+    Observable<Error> getRequiredGlobalQueryAsync();
+
+    /**
+     * Test implicitly required query parameter.
+     *
+     * @return the observable to the Error object
+     */
+    Observable<ServiceResponse<Error>> getRequiredGlobalQueryWithServiceResponseAsync();
 
     /**
      * Test implicitly optional query parameter.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the Error object wrapped in {@link ServiceResponse} if successful.
+     * @return the Error object if successful.
      */
-    ServiceResponse<Error> getOptionalGlobalQuery() throws ErrorException, IOException;
+    Error getOptionalGlobalQuery();
 
     /**
      * Test implicitly optional query parameter.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall getOptionalGlobalQueryAsync(final ServiceCallback<Error> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Error> getOptionalGlobalQueryAsync(final ServiceCallback<Error> serviceCallback);
+
+    /**
+     * Test implicitly optional query parameter.
+     *
+     * @return the observable to the Error object
+     */
+    Observable<Error> getOptionalGlobalQueryAsync();
+
+    /**
+     * Test implicitly optional query parameter.
+     *
+     * @return the observable to the Error object
+     */
+    Observable<ServiceResponse<Error>> getOptionalGlobalQueryWithServiceResponseAsync();
 
 }

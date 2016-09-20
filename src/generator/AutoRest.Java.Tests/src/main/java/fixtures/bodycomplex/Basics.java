@@ -14,8 +14,7 @@ import com.microsoft.rest.ServiceCall;
 import com.microsoft.rest.ServiceCallback;
 import com.microsoft.rest.ServiceResponse;
 import fixtures.bodycomplex.models.Basic;
-import fixtures.bodycomplex.models.ErrorException;
-import java.io.IOException;
+import rx.Observable;
 
 /**
  * An instance of this class provides access to all the operations defined
@@ -25,112 +24,178 @@ public interface Basics {
     /**
      * Get complex type {id: 2, name: 'abc', color: 'YELLOW'}.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the Basic object wrapped in {@link ServiceResponse} if successful.
+     * @return the Basic object if successful.
      */
-    ServiceResponse<Basic> getValid() throws ErrorException, IOException;
+    Basic getValid();
 
     /**
      * Get complex type {id: 2, name: 'abc', color: 'YELLOW'}.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall getValidAsync(final ServiceCallback<Basic> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Basic> getValidAsync(final ServiceCallback<Basic> serviceCallback);
+
+    /**
+     * Get complex type {id: 2, name: 'abc', color: 'YELLOW'}.
+     *
+     * @return the observable to the Basic object
+     */
+    Observable<Basic> getValidAsync();
+
+    /**
+     * Get complex type {id: 2, name: 'abc', color: 'YELLOW'}.
+     *
+     * @return the observable to the Basic object
+     */
+    Observable<ServiceResponse<Basic>> getValidWithServiceResponseAsync();
 
     /**
      * Please put {id: 2, name: 'abc', color: 'Magenta'}.
      *
      * @param complexBody Please put {id: 2, name: 'abc', color: 'Magenta'}
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @throws IllegalArgumentException exception thrown from invalid parameters
+     */
+    void putValid(Basic complexBody);
+
+    /**
+     * Please put {id: 2, name: 'abc', color: 'Magenta'}.
+     *
+     * @param complexBody Please put {id: 2, name: 'abc', color: 'Magenta'}
+     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @return the {@link ServiceCall} object
+     */
+    ServiceCall<Void> putValidAsync(Basic complexBody, final ServiceCallback<Void> serviceCallback);
+
+    /**
+     * Please put {id: 2, name: 'abc', color: 'Magenta'}.
+     *
+     * @param complexBody Please put {id: 2, name: 'abc', color: 'Magenta'}
      * @return the {@link ServiceResponse} object if successful.
      */
-    ServiceResponse<Void> putValid(Basic complexBody) throws ErrorException, IOException, IllegalArgumentException;
+    Observable<Void> putValidAsync(Basic complexBody);
 
     /**
      * Please put {id: 2, name: 'abc', color: 'Magenta'}.
      *
      * @param complexBody Please put {id: 2, name: 'abc', color: 'Magenta'}
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
-     * @return the {@link ServiceCall} object
+     * @return the {@link ServiceResponse} object if successful.
      */
-    ServiceCall putValidAsync(Basic complexBody, final ServiceCallback<Void> serviceCallback) throws IllegalArgumentException;
+    Observable<ServiceResponse<Void>> putValidWithServiceResponseAsync(Basic complexBody);
 
     /**
      * Get a basic complex type that is invalid for the local strong type.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the Basic object wrapped in {@link ServiceResponse} if successful.
+     * @return the Basic object if successful.
      */
-    ServiceResponse<Basic> getInvalid() throws ErrorException, IOException;
+    Basic getInvalid();
 
     /**
      * Get a basic complex type that is invalid for the local strong type.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall getInvalidAsync(final ServiceCallback<Basic> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Basic> getInvalidAsync(final ServiceCallback<Basic> serviceCallback);
+
+    /**
+     * Get a basic complex type that is invalid for the local strong type.
+     *
+     * @return the observable to the Basic object
+     */
+    Observable<Basic> getInvalidAsync();
+
+    /**
+     * Get a basic complex type that is invalid for the local strong type.
+     *
+     * @return the observable to the Basic object
+     */
+    Observable<ServiceResponse<Basic>> getInvalidWithServiceResponseAsync();
 
     /**
      * Get a basic complex type that is empty.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the Basic object wrapped in {@link ServiceResponse} if successful.
+     * @return the Basic object if successful.
      */
-    ServiceResponse<Basic> getEmpty() throws ErrorException, IOException;
+    Basic getEmpty();
 
     /**
      * Get a basic complex type that is empty.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall getEmptyAsync(final ServiceCallback<Basic> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Basic> getEmptyAsync(final ServiceCallback<Basic> serviceCallback);
+
+    /**
+     * Get a basic complex type that is empty.
+     *
+     * @return the observable to the Basic object
+     */
+    Observable<Basic> getEmptyAsync();
+
+    /**
+     * Get a basic complex type that is empty.
+     *
+     * @return the observable to the Basic object
+     */
+    Observable<ServiceResponse<Basic>> getEmptyWithServiceResponseAsync();
 
     /**
      * Get a basic complex type whose properties are null.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the Basic object wrapped in {@link ServiceResponse} if successful.
+     * @return the Basic object if successful.
      */
-    ServiceResponse<Basic> getNull() throws ErrorException, IOException;
+    Basic getNull();
 
     /**
      * Get a basic complex type whose properties are null.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall getNullAsync(final ServiceCallback<Basic> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Basic> getNullAsync(final ServiceCallback<Basic> serviceCallback);
+
+    /**
+     * Get a basic complex type whose properties are null.
+     *
+     * @return the observable to the Basic object
+     */
+    Observable<Basic> getNullAsync();
+
+    /**
+     * Get a basic complex type whose properties are null.
+     *
+     * @return the observable to the Basic object
+     */
+    Observable<ServiceResponse<Basic>> getNullWithServiceResponseAsync();
 
     /**
      * Get a basic complex type while the server doesn't provide a response payload.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the Basic object wrapped in {@link ServiceResponse} if successful.
+     * @return the Basic object if successful.
      */
-    ServiceResponse<Basic> getNotProvided() throws ErrorException, IOException;
+    Basic getNotProvided();
 
     /**
      * Get a basic complex type while the server doesn't provide a response payload.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall getNotProvidedAsync(final ServiceCallback<Basic> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Basic> getNotProvidedAsync(final ServiceCallback<Basic> serviceCallback);
+
+    /**
+     * Get a basic complex type while the server doesn't provide a response payload.
+     *
+     * @return the observable to the Basic object
+     */
+    Observable<Basic> getNotProvidedAsync();
+
+    /**
+     * Get a basic complex type while the server doesn't provide a response payload.
+     *
+     * @return the observable to the Basic object
+     */
+    Observable<ServiceResponse<Basic>> getNotProvidedWithServiceResponseAsync();
 
 }

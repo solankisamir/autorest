@@ -13,9 +13,8 @@ package fixtures.bodyinteger;
 import com.microsoft.rest.ServiceCall;
 import com.microsoft.rest.ServiceCallback;
 import com.microsoft.rest.ServiceResponse;
-import fixtures.bodyinteger.models.ErrorException;
-import java.io.IOException;
 import org.joda.time.DateTime;
+import rx.Observable;
 
 /**
  * An instance of this class provides access to all the operations defined
@@ -25,263 +24,422 @@ public interface Ints {
     /**
      * Get null Int value.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the int object wrapped in {@link ServiceResponse} if successful.
+     * @return the int object if successful.
      */
-    ServiceResponse<Integer> getNull() throws ErrorException, IOException;
+    int getNull();
 
     /**
      * Get null Int value.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall getNullAsync(final ServiceCallback<Integer> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Integer> getNullAsync(final ServiceCallback<Integer> serviceCallback);
+
+    /**
+     * Get null Int value.
+     *
+     * @return the observable to the int object
+     */
+    Observable<Integer> getNullAsync();
+
+    /**
+     * Get null Int value.
+     *
+     * @return the observable to the int object
+     */
+    Observable<ServiceResponse<Integer>> getNullWithServiceResponseAsync();
 
     /**
      * Get invalid Int value.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the int object wrapped in {@link ServiceResponse} if successful.
+     * @return the int object if successful.
      */
-    ServiceResponse<Integer> getInvalid() throws ErrorException, IOException;
+    int getInvalid();
 
     /**
      * Get invalid Int value.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall getInvalidAsync(final ServiceCallback<Integer> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Integer> getInvalidAsync(final ServiceCallback<Integer> serviceCallback);
+
+    /**
+     * Get invalid Int value.
+     *
+     * @return the observable to the int object
+     */
+    Observable<Integer> getInvalidAsync();
+
+    /**
+     * Get invalid Int value.
+     *
+     * @return the observable to the int object
+     */
+    Observable<ServiceResponse<Integer>> getInvalidWithServiceResponseAsync();
 
     /**
      * Get overflow Int32 value.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the int object wrapped in {@link ServiceResponse} if successful.
+     * @return the int object if successful.
      */
-    ServiceResponse<Integer> getOverflowInt32() throws ErrorException, IOException;
+    int getOverflowInt32();
 
     /**
      * Get overflow Int32 value.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall getOverflowInt32Async(final ServiceCallback<Integer> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Integer> getOverflowInt32Async(final ServiceCallback<Integer> serviceCallback);
+
+    /**
+     * Get overflow Int32 value.
+     *
+     * @return the observable to the int object
+     */
+    Observable<Integer> getOverflowInt32Async();
+
+    /**
+     * Get overflow Int32 value.
+     *
+     * @return the observable to the int object
+     */
+    Observable<ServiceResponse<Integer>> getOverflowInt32WithServiceResponseAsync();
 
     /**
      * Get underflow Int32 value.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the int object wrapped in {@link ServiceResponse} if successful.
+     * @return the int object if successful.
      */
-    ServiceResponse<Integer> getUnderflowInt32() throws ErrorException, IOException;
+    int getUnderflowInt32();
 
     /**
      * Get underflow Int32 value.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall getUnderflowInt32Async(final ServiceCallback<Integer> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Integer> getUnderflowInt32Async(final ServiceCallback<Integer> serviceCallback);
+
+    /**
+     * Get underflow Int32 value.
+     *
+     * @return the observable to the int object
+     */
+    Observable<Integer> getUnderflowInt32Async();
+
+    /**
+     * Get underflow Int32 value.
+     *
+     * @return the observable to the int object
+     */
+    Observable<ServiceResponse<Integer>> getUnderflowInt32WithServiceResponseAsync();
 
     /**
      * Get overflow Int64 value.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the long object wrapped in {@link ServiceResponse} if successful.
+     * @return the long object if successful.
      */
-    ServiceResponse<Long> getOverflowInt64() throws ErrorException, IOException;
+    long getOverflowInt64();
 
     /**
      * Get overflow Int64 value.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall getOverflowInt64Async(final ServiceCallback<Long> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Long> getOverflowInt64Async(final ServiceCallback<Long> serviceCallback);
+
+    /**
+     * Get overflow Int64 value.
+     *
+     * @return the observable to the long object
+     */
+    Observable<Long> getOverflowInt64Async();
+
+    /**
+     * Get overflow Int64 value.
+     *
+     * @return the observable to the long object
+     */
+    Observable<ServiceResponse<Long>> getOverflowInt64WithServiceResponseAsync();
 
     /**
      * Get underflow Int64 value.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the long object wrapped in {@link ServiceResponse} if successful.
+     * @return the long object if successful.
      */
-    ServiceResponse<Long> getUnderflowInt64() throws ErrorException, IOException;
+    long getUnderflowInt64();
 
     /**
      * Get underflow Int64 value.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall getUnderflowInt64Async(final ServiceCallback<Long> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Long> getUnderflowInt64Async(final ServiceCallback<Long> serviceCallback);
+
+    /**
+     * Get underflow Int64 value.
+     *
+     * @return the observable to the long object
+     */
+    Observable<Long> getUnderflowInt64Async();
+
+    /**
+     * Get underflow Int64 value.
+     *
+     * @return the observable to the long object
+     */
+    Observable<ServiceResponse<Long>> getUnderflowInt64WithServiceResponseAsync();
 
     /**
      * Put max int32 value.
      *
      * @param intBody the int value
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the {@link ServiceResponse} object if successful.
      */
-    ServiceResponse<Void> putMax32(int intBody) throws ErrorException, IOException;
+    void putMax32(int intBody);
 
     /**
      * Put max int32 value.
      *
      * @param intBody the int value
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall putMax32Async(int intBody, final ServiceCallback<Void> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Void> putMax32Async(int intBody, final ServiceCallback<Void> serviceCallback);
+
+    /**
+     * Put max int32 value.
+     *
+     * @param intBody the int value
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<Void> putMax32Async(int intBody);
+
+    /**
+     * Put max int32 value.
+     *
+     * @param intBody the int value
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<ServiceResponse<Void>> putMax32WithServiceResponseAsync(int intBody);
 
     /**
      * Put max int64 value.
      *
      * @param intBody the long value
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the {@link ServiceResponse} object if successful.
      */
-    ServiceResponse<Void> putMax64(long intBody) throws ErrorException, IOException;
+    void putMax64(long intBody);
 
     /**
      * Put max int64 value.
      *
      * @param intBody the long value
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall putMax64Async(long intBody, final ServiceCallback<Void> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Void> putMax64Async(long intBody, final ServiceCallback<Void> serviceCallback);
+
+    /**
+     * Put max int64 value.
+     *
+     * @param intBody the long value
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<Void> putMax64Async(long intBody);
+
+    /**
+     * Put max int64 value.
+     *
+     * @param intBody the long value
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<ServiceResponse<Void>> putMax64WithServiceResponseAsync(long intBody);
 
     /**
      * Put min int32 value.
      *
      * @param intBody the int value
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the {@link ServiceResponse} object if successful.
      */
-    ServiceResponse<Void> putMin32(int intBody) throws ErrorException, IOException;
+    void putMin32(int intBody);
 
     /**
      * Put min int32 value.
      *
      * @param intBody the int value
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall putMin32Async(int intBody, final ServiceCallback<Void> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Void> putMin32Async(int intBody, final ServiceCallback<Void> serviceCallback);
+
+    /**
+     * Put min int32 value.
+     *
+     * @param intBody the int value
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<Void> putMin32Async(int intBody);
+
+    /**
+     * Put min int32 value.
+     *
+     * @param intBody the int value
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<ServiceResponse<Void>> putMin32WithServiceResponseAsync(int intBody);
 
     /**
      * Put min int64 value.
      *
      * @param intBody the long value
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the {@link ServiceResponse} object if successful.
      */
-    ServiceResponse<Void> putMin64(long intBody) throws ErrorException, IOException;
+    void putMin64(long intBody);
 
     /**
      * Put min int64 value.
      *
      * @param intBody the long value
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall putMin64Async(long intBody, final ServiceCallback<Void> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Void> putMin64Async(long intBody, final ServiceCallback<Void> serviceCallback);
 
     /**
-     * Get datetime encoded as Unix time value.
-     *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the DateTime object wrapped in {@link ServiceResponse} if successful.
-     */
-    ServiceResponse<DateTime> getUnixTime() throws ErrorException, IOException;
-
-    /**
-     * Get datetime encoded as Unix time value.
-     *
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
-     * @return the {@link ServiceCall} object
-     */
-    ServiceCall getUnixTimeAsync(final ServiceCallback<DateTime> serviceCallback) throws IllegalArgumentException;
-
-    /**
-     * Put datetime encoded as Unix time.
+     * Put min int64 value.
      *
      * @param intBody the long value
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
      * @return the {@link ServiceResponse} object if successful.
      */
-    ServiceResponse<Void> putUnixTimeDate(DateTime intBody) throws ErrorException, IOException;
+    Observable<Void> putMin64Async(long intBody);
+
+    /**
+     * Put min int64 value.
+     *
+     * @param intBody the long value
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<ServiceResponse<Void>> putMin64WithServiceResponseAsync(long intBody);
+
+    /**
+     * Get datetime encoded as Unix time value.
+     *
+     * @return the DateTime object if successful.
+     */
+    DateTime getUnixTime();
+
+    /**
+     * Get datetime encoded as Unix time value.
+     *
+     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @return the {@link ServiceCall} object
+     */
+    ServiceCall<DateTime> getUnixTimeAsync(final ServiceCallback<DateTime> serviceCallback);
+
+    /**
+     * Get datetime encoded as Unix time value.
+     *
+     * @return the observable to the DateTime object
+     */
+    Observable<DateTime> getUnixTimeAsync();
+
+    /**
+     * Get datetime encoded as Unix time value.
+     *
+     * @return the observable to the DateTime object
+     */
+    Observable<ServiceResponse<DateTime>> getUnixTimeWithServiceResponseAsync();
+
+    /**
+     * Put datetime encoded as Unix time.
+     *
+     * @param intBody the long value
+     */
+    void putUnixTimeDate(DateTime intBody);
 
     /**
      * Put datetime encoded as Unix time.
      *
      * @param intBody the long value
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall putUnixTimeDateAsync(DateTime intBody, final ServiceCallback<Void> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Void> putUnixTimeDateAsync(DateTime intBody, final ServiceCallback<Void> serviceCallback);
+
+    /**
+     * Put datetime encoded as Unix time.
+     *
+     * @param intBody the long value
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<Void> putUnixTimeDateAsync(DateTime intBody);
+
+    /**
+     * Put datetime encoded as Unix time.
+     *
+     * @param intBody the long value
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<ServiceResponse<Void>> putUnixTimeDateWithServiceResponseAsync(DateTime intBody);
 
     /**
      * Get invalid Unix time value.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the DateTime object wrapped in {@link ServiceResponse} if successful.
+     * @return the DateTime object if successful.
      */
-    ServiceResponse<DateTime> getInvalidUnixTime() throws ErrorException, IOException;
+    DateTime getInvalidUnixTime();
 
     /**
      * Get invalid Unix time value.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall getInvalidUnixTimeAsync(final ServiceCallback<DateTime> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<DateTime> getInvalidUnixTimeAsync(final ServiceCallback<DateTime> serviceCallback);
+
+    /**
+     * Get invalid Unix time value.
+     *
+     * @return the observable to the DateTime object
+     */
+    Observable<DateTime> getInvalidUnixTimeAsync();
+
+    /**
+     * Get invalid Unix time value.
+     *
+     * @return the observable to the DateTime object
+     */
+    Observable<ServiceResponse<DateTime>> getInvalidUnixTimeWithServiceResponseAsync();
 
     /**
      * Get null Unix time value.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the DateTime object wrapped in {@link ServiceResponse} if successful.
+     * @return the DateTime object if successful.
      */
-    ServiceResponse<DateTime> getNullUnixTime() throws ErrorException, IOException;
+    DateTime getNullUnixTime();
 
     /**
      * Get null Unix time value.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall getNullUnixTimeAsync(final ServiceCallback<DateTime> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<DateTime> getNullUnixTimeAsync(final ServiceCallback<DateTime> serviceCallback);
+
+    /**
+     * Get null Unix time value.
+     *
+     * @return the observable to the DateTime object
+     */
+    Observable<DateTime> getNullUnixTimeAsync();
+
+    /**
+     * Get null Unix time value.
+     *
+     * @return the observable to the DateTime object
+     */
+    Observable<ServiceResponse<DateTime>> getNullUnixTimeWithServiceResponseAsync();
 
 }

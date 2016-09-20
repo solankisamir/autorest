@@ -15,11 +15,37 @@ To install:
 Release History
 ---------------
 
-2016-xx-xx Version xxxxx
+2016-09-14 Version 0.4.4
 ++++++++++++++++++++++++
 
 **Bugfixes**
 
+- Remove paging URL validation, part of fix https://github.com/Azure/autorest/pull/1420
+
+**Disclaimer**
+
+In order to get paging fixes for impacted clients, you need this package and Autorest > 0.17.0 Nightly 20160913
+
+2016-09-01 Version 0.4.3
+++++++++++++++++++++++++
+
+**Bugfixes**
+
+- Better exception message (https://github.com/Azure/autorest/pull/1300)
+
+2016-08-15 Version 0.4.2
+++++++++++++++++++++++++
+
+**Bugfixes**
+
+- Fix serialization if "object" type contains None (https://github.com/Azure/autorest/issues/1353)
+
+2016-08-08 Version 0.4.1
+++++++++++++++++++++++++
+
+**Bugfixes**
+
+- Fix compatibility issues with requests 2.11.0 (https://github.com/Azure/autorest/issues/1337)
 - Allow url of ClientRequest to have parameters (https://github.com/Azure/autorest/issues/1217)
 
 2016-05-25 Version 0.4.0

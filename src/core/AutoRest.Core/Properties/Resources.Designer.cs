@@ -267,6 +267,15 @@ namespace AutoRest.Core.Properties {
         }
         
         /// <summary>
+        ///    Looks up a localized string similar to Constraint is not supported for this type and will be ignored..
+        /// </summary>
+        public static string InvalidConstraint {
+            get {
+                return ResourceManager.GetString("InvalidConstraint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///    Looks up a localized string similar to The default value is not one of the values enumerated as valid for this element..
         /// </summary>
         public static string InvalidDefault {
@@ -290,15 +299,6 @@ namespace AutoRest.Core.Properties {
         public static string InvalidSchemaParameter {
             get {
                 return ResourceManager.GetString("InvalidSchemaParameter", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///    Looks up a localized string similar to Type {0} and format {1} is not a supported combination.
-        /// </summary>
-        public static string InvalidTypeFormatCombination {
-            get {
-                return ResourceManager.GetString("InvalidTypeFormatCombination", resourceCulture);
             }
         }
         
@@ -357,15 +357,6 @@ namespace AutoRest.Core.Properties {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to There is no default response defined in the responses section.
-        /// </summary>
-        public static string NoDefaultResponse {
-            get {
-                return ResourceManager.GetString("NoDefaultResponse", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///    Looks up a localized string similar to Could not find a definition for the path parameter &apos;{0}&apos;.
         /// </summary>
         public static string NoDefinitionForPathParameter {
@@ -375,7 +366,7 @@ namespace AutoRest.Core.Properties {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to No response objects defined..
+        ///    Looks up a localized string similar to No responses defined..
         /// </summary>
         public static string NoResponses {
             get {
@@ -456,7 +447,16 @@ namespace AutoRest.Core.Properties {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to The path &apos;{0}&apos; in x-ms-paths does not overload a normal path in the paths section..
+        ///    Looks up a localized string similar to &apos;{0}&apos; is not a known format..
+        /// </summary>
+        public static string UnknownFormat {
+            get {
+                return ResourceManager.GetString("UnknownFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Paths in x-ms-paths must overload a normal path in the paths section..
         /// </summary>
         public static string XMSPathBaseNotInPaths {
             get {

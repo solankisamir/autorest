@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using System;
+using System.IO;
 using System.Globalization;
 using System.Linq;
 using AutoRest.CompositeSwagger.Model;
@@ -52,8 +53,18 @@ namespace AutoRest.CompositeSwagger
                 throw ErrorManager.CreateError(Resources.InfoSectionMissing);
             }
 
-            ServiceClient compositeClient = InitializeServiceClient(compositeSwaggerModel);
+            // Ensure all the docs are absolute URIs or rooted paths
+            for (var i = 0; i < compositeSwaggerModel.Documents.Count; i++)
+            {
+                var compositeDocument = compositeSwaggerModel.Documents[i];
+                if (!FileSystem.IsCompletePath(compositeDocument))
+                {
+                    // Otherwise, root it from the current path
+                    compositeSwaggerModel.Documents[i] = FileSystem.MakePathRooted(Settings.InputFolder, compositeDocument);
+                }
+            }
 
+            ServiceClient compositeClient = InitializeServiceClient(compositeSwaggerModel);
             foreach (var childSwaggerPath in compositeSwaggerModel.Documents)
             {
                 Settings.Input = childSwaggerPath;
@@ -82,6 +93,7 @@ namespace AutoRest.CompositeSwagger
                 compositeClient.Name = Settings.ClientName;
             }
             compositeClient.Namespace = Settings.Namespace;
+            compositeClient.ModelsName = Settings.ModelsName;
             compositeClient.Documentation = compositeSwaggerModel.Info.Description;
 
             return compositeClient;
@@ -97,7 +109,7 @@ namespace AutoRest.CompositeSwagger
                     TypeNameHandling = TypeNameHandling.None,
                     MetadataPropertyHandling = MetadataPropertyHandling.Ignore
                 };
-                return JsonConvert.DeserializeObject<CompositeServiceDefinition>(inputBody, settings);                
+                return JsonConvert.DeserializeObject<CompositeServiceDefinition>(inputBody, settings);
             }
             catch (JsonException ex)
             {
@@ -119,7 +131,7 @@ namespace AutoRest.CompositeSwagger
             }
 
             // Merge
-            if(compositeClient.BaseUrl == null)
+            if (compositeClient.BaseUrl == null)
             {
                 compositeClient.BaseUrl = subClient.BaseUrl;
             }
@@ -279,6 +291,15 @@ namespace AutoRest.CompositeSwagger
             // No composite modeler validation messages yet
             messages = new List<ValidationMessage>();
             return Build();
+        }
+
+        /// <summary>
+        /// Copares two versions of the same service specification.
+        /// </summary>
+        /// <returns></returns>
+        public override IEnumerable<ComparisonMessage> Compare()
+        {
+            throw new NotImplementedException("Version comparison of compositions. Please run the comparison on individual specifications");
         }
     }
 }

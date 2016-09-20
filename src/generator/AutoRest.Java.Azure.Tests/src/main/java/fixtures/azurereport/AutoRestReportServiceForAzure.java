@@ -15,9 +15,8 @@ import com.microsoft.azure.RestClient;
 import com.microsoft.rest.ServiceCall;
 import com.microsoft.rest.ServiceCallback;
 import com.microsoft.rest.ServiceResponse;
-import fixtures.azurereport.models.ErrorException;
-import java.io.IOException;
 import java.util.Map;
+import rx.Observable;
 
 /**
  * The interface for AutoRestReportServiceForAzure class.
@@ -91,19 +90,30 @@ public interface AutoRestReportServiceForAzure {
     /**
      * Get test coverage report.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the Map&lt;String, Integer&gt; object wrapped in {@link ServiceResponse} if successful.
+     * @return the Map&lt;String, Integer&gt; object if successful.
      */
-    ServiceResponse<Map<String, Integer>> getReport() throws ErrorException, IOException;
+    Map<String, Integer> getReport();
 
     /**
      * Get test coverage report.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall getReportAsync(final ServiceCallback<Map<String, Integer>> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Map<String, Integer>> getReportAsync(final ServiceCallback<Map<String, Integer>> serviceCallback);
+
+    /**
+     * Get test coverage report.
+     *
+     * @return the observable to the Map&lt;String, Integer&gt; object
+     */
+    Observable<Map<String, Integer>> getReportAsync();
+
+    /**
+     * Get test coverage report.
+     *
+     * @return the observable to the Map&lt;String, Integer&gt; object
+     */
+    Observable<ServiceResponse<Map<String, Integer>>> getReportWithServiceResponseAsync();
 
 }

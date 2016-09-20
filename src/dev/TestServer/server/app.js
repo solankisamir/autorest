@@ -44,7 +44,7 @@ var app = express();
 var now = new Date();
 var logFileName = 'AccTestServer-' + now.getHours() +
     now.getMinutes() + now.getSeconds() + '.log';
-var testResultDir = path.join(__dirname, '../../../TestResults');
+var testResultDir = path.join(__dirname, '../../../../TestResults');
 if (!fs.existsSync(testResultDir)) {
   fs.mkdirSync(testResultDir);
 }
@@ -290,6 +290,10 @@ var coverage = {
   "UrlQueriesArrayCsvNull": 0,
   "UrlQueriesArrayCsvEmpty": 0,
   "UrlQueriesArrayCsvValid": 0,
+  //Once all the languages implement this test, the scenario counter should be reset to zero. It is currently implemented in C# and Python
+  "UrlQueriesArrayMultiNull": 1,
+  "UrlQueriesArrayMultiEmpty": 1,
+  "UrlQueriesArrayMultiValid": 1,
   "UrlQueriesArraySsvValid": 0,
   "UrlQueriesArrayPipesValid": 0,
   "UrlQueriesArrayTsvValid": 0,

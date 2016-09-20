@@ -11,12 +11,15 @@ using AutoRest.Core.ClientModel;
 using AutoRest.Core.Utilities;
 using AutoRest.Extensions;
 using AutoRest.Python.Properties;
+using Microsoft.Rest.Generator.Python;
 
 namespace AutoRest.Python
 {
     public class PythonCodeNamer : CodeNamer
     {
         private readonly HashSet<IType> _normalizedTypes;
+
+        private Regex InvalidNamespace = new Regex(@"(^\d)|(\w*\W\w*)");
 
         /// <summary>
         /// Initializes a new instance of CSharpCodeNamingFramework.
@@ -172,12 +175,16 @@ namespace AutoRest.Python
             {
                 throw new ArgumentNullException("client");
             }
-
+            var originalNamespace = client.Namespace;
             base.NormalizeClientModel(client);
+            var globalParams = new List<Parameter>();
             foreach (var method in client.Methods)
             {
                 foreach (var parameter in method.Parameters)
                 {
+                    if (parameter.Extensions.ContainsKey("hostParameter"))
+                        globalParams.Add(parameter);
+
                     if (parameter.ClientProperty != null)
                     {
                         parameter.Name = string.Format(CultureInfo.InvariantCulture,
@@ -185,6 +192,21 @@ namespace AutoRest.Python
                             parameter.ClientProperty.Name);
                     }
                 }
+            }
+            foreach (var parameter in globalParams.Distinct())
+            {
+                QuoteParameter(parameter);
+            }
+            if (originalNamespace != null)
+            {
+                foreach (var section in originalNamespace.Split('.'))
+                {
+                    if (InvalidNamespace.Match(section).Success)
+                    {
+                        throw new ArgumentException(string.Format("Invalid Python namespace: {0}", originalNamespace));
+                    }
+                }
+                client.Namespace = originalNamespace;
             }
         }
 
@@ -200,7 +222,8 @@ namespace AutoRest.Python
                 {
                     parameter.Name = method.Scope.GetUniqueName(GetParameterName(parameter.GetClientName()));
                     parameter.Type = NormalizeTypeReference(parameter.Type);
-                    QuoteParameter(parameter);
+                    if (!parameter.Extensions.ContainsKey("hostParameter"))
+                        QuoteParameter(parameter);
                 }
 
                 foreach (var parameterTransformation in method.InputParameterTransformation)
@@ -444,24 +467,15 @@ namespace AutoRest.Python
                 else
                 {
                     //TODO: Add support for default KnownPrimaryType.DateTimeRfc1123
-                    //TODO: Default date objects can only be supported with an isodate import statement
 
-                    //if (primaryType.Type == KnownPrimaryType.Date)
-                    //{
-                    //    parsedDefault = "isodate.parse_date(\"" + defaultValue + "\")";
-                    //}
+                    if (primaryType.Type == KnownPrimaryType.Date ||
+                        primaryType.Type == KnownPrimaryType.DateTime ||
+                        primaryType.Type == KnownPrimaryType.TimeSpan)
+                    {
+                        parsedDefault = CodeNamer.QuoteValue(defaultValue);
+                    }
 
-                    //else if (primaryType.Type == KnownPrimaryType.DateTime)
-                    //{
-                    //    parsedDefault = "isodate.parse_datetime(\"" + defaultValue + "\")";
-                    //}
-
-                    //else if (primaryType.Type == KnownPrimaryType.TimeSpan)
-                    //{
-                    //    parsedDefault = "isodate.parse_duration(\"" + defaultValue + "\")";
-                    //}
-
-                    if (primaryType.Type == KnownPrimaryType.ByteArray)
+                    else if (primaryType.Type == KnownPrimaryType.ByteArray)
                     {
                         parsedDefault = "bytearray(\"" + defaultValue + "\", encoding=\"utf-8\")";
                     }

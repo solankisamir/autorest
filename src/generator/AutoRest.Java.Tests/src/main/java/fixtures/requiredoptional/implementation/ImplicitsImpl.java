@@ -17,12 +17,10 @@ import com.microsoft.rest.ServiceCall;
 import com.microsoft.rest.ServiceCallback;
 import com.microsoft.rest.ServiceResponse;
 import com.microsoft.rest.ServiceResponseBuilder;
-import com.microsoft.rest.ServiceResponseCallback;
 import fixtures.requiredoptional.models.Error;
 import fixtures.requiredoptional.models.ErrorException;
 import java.io.IOException;
 import okhttp3.ResponseBody;
-import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -31,6 +29,8 @@ import retrofit2.http.Path;
 import retrofit2.http.PUT;
 import retrofit2.http.Query;
 import retrofit2.Response;
+import rx.functions.Func1;
+import rx.Observable;
 
 /**
  * An instance of this class provides access to all the operations defined
@@ -60,31 +60,31 @@ public final class ImplicitsImpl implements Implicits {
     interface ImplicitsService {
         @Headers("Content-Type: application/json; charset=utf-8")
         @GET("reqopt/implicit/required/path/{pathParameter}")
-        Call<ResponseBody> getRequiredPath(@Path("pathParameter") String pathParameter);
+        Observable<Response<ResponseBody>> getRequiredPath(@Path("pathParameter") String pathParameter);
 
         @Headers("Content-Type: application/json; charset=utf-8")
         @PUT("reqopt/implicit/optional/query")
-        Call<ResponseBody> putOptionalQuery(@Query("queryParameter") String queryParameter);
+        Observable<Response<ResponseBody>> putOptionalQuery(@Query("queryParameter") String queryParameter);
 
         @Headers("Content-Type: application/json; charset=utf-8")
         @PUT("reqopt/implicit/optional/header")
-        Call<ResponseBody> putOptionalHeader(@Header("queryParameter") String queryParameter);
+        Observable<Response<ResponseBody>> putOptionalHeader(@Header("queryParameter") String queryParameter);
 
         @Headers("Content-Type: application/json; charset=utf-8")
         @PUT("reqopt/implicit/optional/body")
-        Call<ResponseBody> putOptionalBody(@Body String bodyParameter);
+        Observable<Response<ResponseBody>> putOptionalBody(@Body String bodyParameter);
 
         @Headers("Content-Type: application/json; charset=utf-8")
         @GET("reqopt/global/required/path/{required-global-path}")
-        Call<ResponseBody> getRequiredGlobalPath(@Path("required-global-path") String requiredGlobalPath);
+        Observable<Response<ResponseBody>> getRequiredGlobalPath(@Path("required-global-path") String requiredGlobalPath);
 
         @Headers("Content-Type: application/json; charset=utf-8")
         @GET("reqopt/global/required/query")
-        Call<ResponseBody> getRequiredGlobalQuery(@Query("required-global-query") String requiredGlobalQuery);
+        Observable<Response<ResponseBody>> getRequiredGlobalQuery(@Query("required-global-query") String requiredGlobalQuery);
 
         @Headers("Content-Type: application/json; charset=utf-8")
         @GET("reqopt/global/optional/query")
-        Call<ResponseBody> getOptionalGlobalQuery(@Query("optional-global-query") Integer optionalGlobalQuery);
+        Observable<Response<ResponseBody>> getOptionalGlobalQuery(@Query("optional-global-query") Integer optionalGlobalQuery);
 
     }
 
@@ -92,17 +92,10 @@ public final class ImplicitsImpl implements Implicits {
      * Test implicitly required path parameter.
      *
      * @param pathParameter the String value
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @throws IllegalArgumentException exception thrown from invalid parameters
-     * @return the Error object wrapped in {@link ServiceResponse} if successful.
+     * @return the Error object if successful.
      */
-    public ServiceResponse<Error> getRequiredPath(String pathParameter) throws ErrorException, IOException, IllegalArgumentException {
-        if (pathParameter == null) {
-            throw new IllegalArgumentException("Parameter pathParameter is required and cannot be null.");
-        }
-        Call<ResponseBody> call = service.getRequiredPath(pathParameter);
-        return getRequiredPathDelegate(call.execute());
+    public Error getRequiredPath(String pathParameter) {
+        return getRequiredPathWithServiceResponseAsync(pathParameter).toBlocking().single().getBody();
     }
 
     /**
@@ -110,30 +103,49 @@ public final class ImplicitsImpl implements Implicits {
      *
      * @param pathParameter the String value
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
-     * @return the {@link Call} object
+     * @return the {@link ServiceCall} object
      */
-    public ServiceCall getRequiredPathAsync(String pathParameter, final ServiceCallback<Error> serviceCallback) throws IllegalArgumentException {
-        if (serviceCallback == null) {
-            throw new IllegalArgumentException("ServiceCallback is required for async calls.");
-        }
-        if (pathParameter == null) {
-            serviceCallback.failure(new IllegalArgumentException("Parameter pathParameter is required and cannot be null."));
-            return null;
-        }
-        Call<ResponseBody> call = service.getRequiredPath(pathParameter);
-        final ServiceCall serviceCall = new ServiceCall(call);
-        call.enqueue(new ServiceResponseCallback<Error>(serviceCallback) {
+    public ServiceCall<Error> getRequiredPathAsync(String pathParameter, final ServiceCallback<Error> serviceCallback) {
+        return ServiceCall.create(getRequiredPathWithServiceResponseAsync(pathParameter), serviceCallback);
+    }
+
+    /**
+     * Test implicitly required path parameter.
+     *
+     * @param pathParameter the String value
+     * @return the observable to the Error object
+     */
+    public Observable<Error> getRequiredPathAsync(String pathParameter) {
+        return getRequiredPathWithServiceResponseAsync(pathParameter).map(new Func1<ServiceResponse<Error>, Error>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    serviceCallback.success(getRequiredPathDelegate(response));
-                } catch (ErrorException | IOException exception) {
-                    serviceCallback.failure(exception);
-                }
+            public Error call(ServiceResponse<Error> response) {
+                return response.getBody();
             }
         });
-        return serviceCall;
+    }
+
+    /**
+     * Test implicitly required path parameter.
+     *
+     * @param pathParameter the String value
+     * @return the observable to the Error object
+     */
+    public Observable<ServiceResponse<Error>> getRequiredPathWithServiceResponseAsync(String pathParameter) {
+        if (pathParameter == null) {
+            throw new IllegalArgumentException("Parameter pathParameter is required and cannot be null.");
+        }
+        return service.getRequiredPath(pathParameter)
+            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Error>>>() {
+                @Override
+                public Observable<ServiceResponse<Error>> call(Response<ResponseBody> response) {
+                    try {
+                        ServiceResponse<Error> clientResponse = getRequiredPathDelegate(response);
+                        return Observable.just(clientResponse);
+                    } catch (Throwable t) {
+                        return Observable.error(t);
+                    }
+                }
+            });
     }
 
     private ServiceResponse<Error> getRequiredPathDelegate(Response<ResponseBody> response) throws ErrorException, IOException, IllegalArgumentException {
@@ -145,54 +157,63 @@ public final class ImplicitsImpl implements Implicits {
     /**
      * Test implicitly optional query parameter.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the {@link ServiceResponse} object if successful.
      */
-    public ServiceResponse<Void> putOptionalQuery() throws ErrorException, IOException {
-        final String queryParameter = null;
-        Call<ResponseBody> call = service.putOptionalQuery(queryParameter);
-        return putOptionalQueryDelegate(call.execute());
+    public void putOptionalQuery() {
+        putOptionalQueryWithServiceResponseAsync().toBlocking().single().getBody();
     }
 
     /**
      * Test implicitly optional query parameter.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
-     * @return the {@link Call} object
+     * @return the {@link ServiceCall} object
      */
-    public ServiceCall putOptionalQueryAsync(final ServiceCallback<Void> serviceCallback) throws IllegalArgumentException {
-        if (serviceCallback == null) {
-            throw new IllegalArgumentException("ServiceCallback is required for async calls.");
-        }
-        final String queryParameter = null;
-        Call<ResponseBody> call = service.putOptionalQuery(queryParameter);
-        final ServiceCall serviceCall = new ServiceCall(call);
-        call.enqueue(new ServiceResponseCallback<Void>(serviceCallback) {
+    public ServiceCall<Void> putOptionalQueryAsync(final ServiceCallback<Void> serviceCallback) {
+        return ServiceCall.create(putOptionalQueryWithServiceResponseAsync(), serviceCallback);
+    }
+
+    /**
+     * Test implicitly optional query parameter.
+     *
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    public Observable<Void> putOptionalQueryAsync() {
+        return putOptionalQueryWithServiceResponseAsync().map(new Func1<ServiceResponse<Void>, Void>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    serviceCallback.success(putOptionalQueryDelegate(response));
-                } catch (ErrorException | IOException exception) {
-                    serviceCallback.failure(exception);
-                }
+            public Void call(ServiceResponse<Void> response) {
+                return response.getBody();
             }
         });
-        return serviceCall;
+    }
+
+    /**
+     * Test implicitly optional query parameter.
+     *
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    public Observable<ServiceResponse<Void>> putOptionalQueryWithServiceResponseAsync() {
+        final String queryParameter = null;
+        return service.putOptionalQuery(queryParameter)
+            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Void>>>() {
+                @Override
+                public Observable<ServiceResponse<Void>> call(Response<ResponseBody> response) {
+                    try {
+                        ServiceResponse<Void> clientResponse = putOptionalQueryDelegate(response);
+                        return Observable.just(clientResponse);
+                    } catch (Throwable t) {
+                        return Observable.error(t);
+                    }
+                }
+            });
     }
 
     /**
      * Test implicitly optional query parameter.
      *
      * @param queryParameter the String value
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the {@link ServiceResponse} object if successful.
      */
-    public ServiceResponse<Void> putOptionalQuery(String queryParameter) throws ErrorException, IOException {
-        Call<ResponseBody> call = service.putOptionalQuery(queryParameter);
-        return putOptionalQueryDelegate(call.execute());
+    public void putOptionalQuery(String queryParameter) {
+        putOptionalQueryWithServiceResponseAsync(queryParameter).toBlocking().single().getBody();
     }
 
     /**
@@ -200,26 +221,46 @@ public final class ImplicitsImpl implements Implicits {
      *
      * @param queryParameter the String value
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
-     * @return the {@link Call} object
+     * @return the {@link ServiceCall} object
      */
-    public ServiceCall putOptionalQueryAsync(String queryParameter, final ServiceCallback<Void> serviceCallback) throws IllegalArgumentException {
-        if (serviceCallback == null) {
-            throw new IllegalArgumentException("ServiceCallback is required for async calls.");
-        }
-        Call<ResponseBody> call = service.putOptionalQuery(queryParameter);
-        final ServiceCall serviceCall = new ServiceCall(call);
-        call.enqueue(new ServiceResponseCallback<Void>(serviceCallback) {
+    public ServiceCall<Void> putOptionalQueryAsync(String queryParameter, final ServiceCallback<Void> serviceCallback) {
+        return ServiceCall.create(putOptionalQueryWithServiceResponseAsync(queryParameter), serviceCallback);
+    }
+
+    /**
+     * Test implicitly optional query parameter.
+     *
+     * @param queryParameter the String value
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    public Observable<Void> putOptionalQueryAsync(String queryParameter) {
+        return putOptionalQueryWithServiceResponseAsync(queryParameter).map(new Func1<ServiceResponse<Void>, Void>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    serviceCallback.success(putOptionalQueryDelegate(response));
-                } catch (ErrorException | IOException exception) {
-                    serviceCallback.failure(exception);
-                }
+            public Void call(ServiceResponse<Void> response) {
+                return response.getBody();
             }
         });
-        return serviceCall;
+    }
+
+    /**
+     * Test implicitly optional query parameter.
+     *
+     * @param queryParameter the String value
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    public Observable<ServiceResponse<Void>> putOptionalQueryWithServiceResponseAsync(String queryParameter) {
+        return service.putOptionalQuery(queryParameter)
+            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Void>>>() {
+                @Override
+                public Observable<ServiceResponse<Void>> call(Response<ResponseBody> response) {
+                    try {
+                        ServiceResponse<Void> clientResponse = putOptionalQueryDelegate(response);
+                        return Observable.just(clientResponse);
+                    } catch (Throwable t) {
+                        return Observable.error(t);
+                    }
+                }
+            });
     }
 
     private ServiceResponse<Void> putOptionalQueryDelegate(Response<ResponseBody> response) throws ErrorException, IOException {
@@ -232,54 +273,63 @@ public final class ImplicitsImpl implements Implicits {
     /**
      * Test implicitly optional header parameter.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the {@link ServiceResponse} object if successful.
      */
-    public ServiceResponse<Void> putOptionalHeader() throws ErrorException, IOException {
-        final String queryParameter = null;
-        Call<ResponseBody> call = service.putOptionalHeader(queryParameter);
-        return putOptionalHeaderDelegate(call.execute());
+    public void putOptionalHeader() {
+        putOptionalHeaderWithServiceResponseAsync().toBlocking().single().getBody();
     }
 
     /**
      * Test implicitly optional header parameter.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
-     * @return the {@link Call} object
+     * @return the {@link ServiceCall} object
      */
-    public ServiceCall putOptionalHeaderAsync(final ServiceCallback<Void> serviceCallback) throws IllegalArgumentException {
-        if (serviceCallback == null) {
-            throw new IllegalArgumentException("ServiceCallback is required for async calls.");
-        }
-        final String queryParameter = null;
-        Call<ResponseBody> call = service.putOptionalHeader(queryParameter);
-        final ServiceCall serviceCall = new ServiceCall(call);
-        call.enqueue(new ServiceResponseCallback<Void>(serviceCallback) {
+    public ServiceCall<Void> putOptionalHeaderAsync(final ServiceCallback<Void> serviceCallback) {
+        return ServiceCall.create(putOptionalHeaderWithServiceResponseAsync(), serviceCallback);
+    }
+
+    /**
+     * Test implicitly optional header parameter.
+     *
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    public Observable<Void> putOptionalHeaderAsync() {
+        return putOptionalHeaderWithServiceResponseAsync().map(new Func1<ServiceResponse<Void>, Void>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    serviceCallback.success(putOptionalHeaderDelegate(response));
-                } catch (ErrorException | IOException exception) {
-                    serviceCallback.failure(exception);
-                }
+            public Void call(ServiceResponse<Void> response) {
+                return response.getBody();
             }
         });
-        return serviceCall;
+    }
+
+    /**
+     * Test implicitly optional header parameter.
+     *
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    public Observable<ServiceResponse<Void>> putOptionalHeaderWithServiceResponseAsync() {
+        final String queryParameter = null;
+        return service.putOptionalHeader(queryParameter)
+            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Void>>>() {
+                @Override
+                public Observable<ServiceResponse<Void>> call(Response<ResponseBody> response) {
+                    try {
+                        ServiceResponse<Void> clientResponse = putOptionalHeaderDelegate(response);
+                        return Observable.just(clientResponse);
+                    } catch (Throwable t) {
+                        return Observable.error(t);
+                    }
+                }
+            });
     }
 
     /**
      * Test implicitly optional header parameter.
      *
      * @param queryParameter the String value
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the {@link ServiceResponse} object if successful.
      */
-    public ServiceResponse<Void> putOptionalHeader(String queryParameter) throws ErrorException, IOException {
-        Call<ResponseBody> call = service.putOptionalHeader(queryParameter);
-        return putOptionalHeaderDelegate(call.execute());
+    public void putOptionalHeader(String queryParameter) {
+        putOptionalHeaderWithServiceResponseAsync(queryParameter).toBlocking().single().getBody();
     }
 
     /**
@@ -287,26 +337,46 @@ public final class ImplicitsImpl implements Implicits {
      *
      * @param queryParameter the String value
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
-     * @return the {@link Call} object
+     * @return the {@link ServiceCall} object
      */
-    public ServiceCall putOptionalHeaderAsync(String queryParameter, final ServiceCallback<Void> serviceCallback) throws IllegalArgumentException {
-        if (serviceCallback == null) {
-            throw new IllegalArgumentException("ServiceCallback is required for async calls.");
-        }
-        Call<ResponseBody> call = service.putOptionalHeader(queryParameter);
-        final ServiceCall serviceCall = new ServiceCall(call);
-        call.enqueue(new ServiceResponseCallback<Void>(serviceCallback) {
+    public ServiceCall<Void> putOptionalHeaderAsync(String queryParameter, final ServiceCallback<Void> serviceCallback) {
+        return ServiceCall.create(putOptionalHeaderWithServiceResponseAsync(queryParameter), serviceCallback);
+    }
+
+    /**
+     * Test implicitly optional header parameter.
+     *
+     * @param queryParameter the String value
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    public Observable<Void> putOptionalHeaderAsync(String queryParameter) {
+        return putOptionalHeaderWithServiceResponseAsync(queryParameter).map(new Func1<ServiceResponse<Void>, Void>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    serviceCallback.success(putOptionalHeaderDelegate(response));
-                } catch (ErrorException | IOException exception) {
-                    serviceCallback.failure(exception);
-                }
+            public Void call(ServiceResponse<Void> response) {
+                return response.getBody();
             }
         });
-        return serviceCall;
+    }
+
+    /**
+     * Test implicitly optional header parameter.
+     *
+     * @param queryParameter the String value
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    public Observable<ServiceResponse<Void>> putOptionalHeaderWithServiceResponseAsync(String queryParameter) {
+        return service.putOptionalHeader(queryParameter)
+            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Void>>>() {
+                @Override
+                public Observable<ServiceResponse<Void>> call(Response<ResponseBody> response) {
+                    try {
+                        ServiceResponse<Void> clientResponse = putOptionalHeaderDelegate(response);
+                        return Observable.just(clientResponse);
+                    } catch (Throwable t) {
+                        return Observable.error(t);
+                    }
+                }
+            });
     }
 
     private ServiceResponse<Void> putOptionalHeaderDelegate(Response<ResponseBody> response) throws ErrorException, IOException {
@@ -319,54 +389,63 @@ public final class ImplicitsImpl implements Implicits {
     /**
      * Test implicitly optional body parameter.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the {@link ServiceResponse} object if successful.
      */
-    public ServiceResponse<Void> putOptionalBody() throws ErrorException, IOException {
-        final String bodyParameter = null;
-        Call<ResponseBody> call = service.putOptionalBody(bodyParameter);
-        return putOptionalBodyDelegate(call.execute());
+    public void putOptionalBody() {
+        putOptionalBodyWithServiceResponseAsync().toBlocking().single().getBody();
     }
 
     /**
      * Test implicitly optional body parameter.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
-     * @return the {@link Call} object
+     * @return the {@link ServiceCall} object
      */
-    public ServiceCall putOptionalBodyAsync(final ServiceCallback<Void> serviceCallback) throws IllegalArgumentException {
-        if (serviceCallback == null) {
-            throw new IllegalArgumentException("ServiceCallback is required for async calls.");
-        }
-        final String bodyParameter = null;
-        Call<ResponseBody> call = service.putOptionalBody(bodyParameter);
-        final ServiceCall serviceCall = new ServiceCall(call);
-        call.enqueue(new ServiceResponseCallback<Void>(serviceCallback) {
+    public ServiceCall<Void> putOptionalBodyAsync(final ServiceCallback<Void> serviceCallback) {
+        return ServiceCall.create(putOptionalBodyWithServiceResponseAsync(), serviceCallback);
+    }
+
+    /**
+     * Test implicitly optional body parameter.
+     *
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    public Observable<Void> putOptionalBodyAsync() {
+        return putOptionalBodyWithServiceResponseAsync().map(new Func1<ServiceResponse<Void>, Void>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    serviceCallback.success(putOptionalBodyDelegate(response));
-                } catch (ErrorException | IOException exception) {
-                    serviceCallback.failure(exception);
-                }
+            public Void call(ServiceResponse<Void> response) {
+                return response.getBody();
             }
         });
-        return serviceCall;
+    }
+
+    /**
+     * Test implicitly optional body parameter.
+     *
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    public Observable<ServiceResponse<Void>> putOptionalBodyWithServiceResponseAsync() {
+        final String bodyParameter = null;
+        return service.putOptionalBody(bodyParameter)
+            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Void>>>() {
+                @Override
+                public Observable<ServiceResponse<Void>> call(Response<ResponseBody> response) {
+                    try {
+                        ServiceResponse<Void> clientResponse = putOptionalBodyDelegate(response);
+                        return Observable.just(clientResponse);
+                    } catch (Throwable t) {
+                        return Observable.error(t);
+                    }
+                }
+            });
     }
 
     /**
      * Test implicitly optional body parameter.
      *
      * @param bodyParameter the String value
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the {@link ServiceResponse} object if successful.
      */
-    public ServiceResponse<Void> putOptionalBody(String bodyParameter) throws ErrorException, IOException {
-        Call<ResponseBody> call = service.putOptionalBody(bodyParameter);
-        return putOptionalBodyDelegate(call.execute());
+    public void putOptionalBody(String bodyParameter) {
+        putOptionalBodyWithServiceResponseAsync(bodyParameter).toBlocking().single().getBody();
     }
 
     /**
@@ -374,26 +453,46 @@ public final class ImplicitsImpl implements Implicits {
      *
      * @param bodyParameter the String value
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
-     * @return the {@link Call} object
+     * @return the {@link ServiceCall} object
      */
-    public ServiceCall putOptionalBodyAsync(String bodyParameter, final ServiceCallback<Void> serviceCallback) throws IllegalArgumentException {
-        if (serviceCallback == null) {
-            throw new IllegalArgumentException("ServiceCallback is required for async calls.");
-        }
-        Call<ResponseBody> call = service.putOptionalBody(bodyParameter);
-        final ServiceCall serviceCall = new ServiceCall(call);
-        call.enqueue(new ServiceResponseCallback<Void>(serviceCallback) {
+    public ServiceCall<Void> putOptionalBodyAsync(String bodyParameter, final ServiceCallback<Void> serviceCallback) {
+        return ServiceCall.create(putOptionalBodyWithServiceResponseAsync(bodyParameter), serviceCallback);
+    }
+
+    /**
+     * Test implicitly optional body parameter.
+     *
+     * @param bodyParameter the String value
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    public Observable<Void> putOptionalBodyAsync(String bodyParameter) {
+        return putOptionalBodyWithServiceResponseAsync(bodyParameter).map(new Func1<ServiceResponse<Void>, Void>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    serviceCallback.success(putOptionalBodyDelegate(response));
-                } catch (ErrorException | IOException exception) {
-                    serviceCallback.failure(exception);
-                }
+            public Void call(ServiceResponse<Void> response) {
+                return response.getBody();
             }
         });
-        return serviceCall;
+    }
+
+    /**
+     * Test implicitly optional body parameter.
+     *
+     * @param bodyParameter the String value
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    public Observable<ServiceResponse<Void>> putOptionalBodyWithServiceResponseAsync(String bodyParameter) {
+        return service.putOptionalBody(bodyParameter)
+            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Void>>>() {
+                @Override
+                public Observable<ServiceResponse<Void>> call(Response<ResponseBody> response) {
+                    try {
+                        ServiceResponse<Void> clientResponse = putOptionalBodyDelegate(response);
+                        return Observable.just(clientResponse);
+                    } catch (Throwable t) {
+                        return Observable.error(t);
+                    }
+                }
+            });
     }
 
     private ServiceResponse<Void> putOptionalBodyDelegate(Response<ResponseBody> response) throws ErrorException, IOException {
@@ -406,47 +505,57 @@ public final class ImplicitsImpl implements Implicits {
     /**
      * Test implicitly required path parameter.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @throws IllegalArgumentException exception thrown from invalid parameters
-     * @return the Error object wrapped in {@link ServiceResponse} if successful.
+     * @return the Error object if successful.
      */
-    public ServiceResponse<Error> getRequiredGlobalPath() throws ErrorException, IOException, IllegalArgumentException {
-        if (this.client.requiredGlobalPath() == null) {
-            throw new IllegalArgumentException("Parameter this.client.requiredGlobalPath() is required and cannot be null.");
-        }
-        Call<ResponseBody> call = service.getRequiredGlobalPath(this.client.requiredGlobalPath());
-        return getRequiredGlobalPathDelegate(call.execute());
+    public Error getRequiredGlobalPath() {
+        return getRequiredGlobalPathWithServiceResponseAsync().toBlocking().single().getBody();
     }
 
     /**
      * Test implicitly required path parameter.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
-     * @return the {@link Call} object
+     * @return the {@link ServiceCall} object
      */
-    public ServiceCall getRequiredGlobalPathAsync(final ServiceCallback<Error> serviceCallback) throws IllegalArgumentException {
-        if (serviceCallback == null) {
-            throw new IllegalArgumentException("ServiceCallback is required for async calls.");
-        }
-        if (this.client.requiredGlobalPath() == null) {
-            serviceCallback.failure(new IllegalArgumentException("Parameter this.client.requiredGlobalPath() is required and cannot be null."));
-            return null;
-        }
-        Call<ResponseBody> call = service.getRequiredGlobalPath(this.client.requiredGlobalPath());
-        final ServiceCall serviceCall = new ServiceCall(call);
-        call.enqueue(new ServiceResponseCallback<Error>(serviceCallback) {
+    public ServiceCall<Error> getRequiredGlobalPathAsync(final ServiceCallback<Error> serviceCallback) {
+        return ServiceCall.create(getRequiredGlobalPathWithServiceResponseAsync(), serviceCallback);
+    }
+
+    /**
+     * Test implicitly required path parameter.
+     *
+     * @return the observable to the Error object
+     */
+    public Observable<Error> getRequiredGlobalPathAsync() {
+        return getRequiredGlobalPathWithServiceResponseAsync().map(new Func1<ServiceResponse<Error>, Error>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    serviceCallback.success(getRequiredGlobalPathDelegate(response));
-                } catch (ErrorException | IOException exception) {
-                    serviceCallback.failure(exception);
-                }
+            public Error call(ServiceResponse<Error> response) {
+                return response.getBody();
             }
         });
-        return serviceCall;
+    }
+
+    /**
+     * Test implicitly required path parameter.
+     *
+     * @return the observable to the Error object
+     */
+    public Observable<ServiceResponse<Error>> getRequiredGlobalPathWithServiceResponseAsync() {
+        if (this.client.requiredGlobalPath() == null) {
+            throw new IllegalArgumentException("Parameter this.client.requiredGlobalPath() is required and cannot be null.");
+        }
+        return service.getRequiredGlobalPath(this.client.requiredGlobalPath())
+            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Error>>>() {
+                @Override
+                public Observable<ServiceResponse<Error>> call(Response<ResponseBody> response) {
+                    try {
+                        ServiceResponse<Error> clientResponse = getRequiredGlobalPathDelegate(response);
+                        return Observable.just(clientResponse);
+                    } catch (Throwable t) {
+                        return Observable.error(t);
+                    }
+                }
+            });
     }
 
     private ServiceResponse<Error> getRequiredGlobalPathDelegate(Response<ResponseBody> response) throws ErrorException, IOException, IllegalArgumentException {
@@ -458,47 +567,57 @@ public final class ImplicitsImpl implements Implicits {
     /**
      * Test implicitly required query parameter.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @throws IllegalArgumentException exception thrown from invalid parameters
-     * @return the Error object wrapped in {@link ServiceResponse} if successful.
+     * @return the Error object if successful.
      */
-    public ServiceResponse<Error> getRequiredGlobalQuery() throws ErrorException, IOException, IllegalArgumentException {
-        if (this.client.requiredGlobalQuery() == null) {
-            throw new IllegalArgumentException("Parameter this.client.requiredGlobalQuery() is required and cannot be null.");
-        }
-        Call<ResponseBody> call = service.getRequiredGlobalQuery(this.client.requiredGlobalQuery());
-        return getRequiredGlobalQueryDelegate(call.execute());
+    public Error getRequiredGlobalQuery() {
+        return getRequiredGlobalQueryWithServiceResponseAsync().toBlocking().single().getBody();
     }
 
     /**
      * Test implicitly required query parameter.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
-     * @return the {@link Call} object
+     * @return the {@link ServiceCall} object
      */
-    public ServiceCall getRequiredGlobalQueryAsync(final ServiceCallback<Error> serviceCallback) throws IllegalArgumentException {
-        if (serviceCallback == null) {
-            throw new IllegalArgumentException("ServiceCallback is required for async calls.");
-        }
-        if (this.client.requiredGlobalQuery() == null) {
-            serviceCallback.failure(new IllegalArgumentException("Parameter this.client.requiredGlobalQuery() is required and cannot be null."));
-            return null;
-        }
-        Call<ResponseBody> call = service.getRequiredGlobalQuery(this.client.requiredGlobalQuery());
-        final ServiceCall serviceCall = new ServiceCall(call);
-        call.enqueue(new ServiceResponseCallback<Error>(serviceCallback) {
+    public ServiceCall<Error> getRequiredGlobalQueryAsync(final ServiceCallback<Error> serviceCallback) {
+        return ServiceCall.create(getRequiredGlobalQueryWithServiceResponseAsync(), serviceCallback);
+    }
+
+    /**
+     * Test implicitly required query parameter.
+     *
+     * @return the observable to the Error object
+     */
+    public Observable<Error> getRequiredGlobalQueryAsync() {
+        return getRequiredGlobalQueryWithServiceResponseAsync().map(new Func1<ServiceResponse<Error>, Error>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    serviceCallback.success(getRequiredGlobalQueryDelegate(response));
-                } catch (ErrorException | IOException exception) {
-                    serviceCallback.failure(exception);
-                }
+            public Error call(ServiceResponse<Error> response) {
+                return response.getBody();
             }
         });
-        return serviceCall;
+    }
+
+    /**
+     * Test implicitly required query parameter.
+     *
+     * @return the observable to the Error object
+     */
+    public Observable<ServiceResponse<Error>> getRequiredGlobalQueryWithServiceResponseAsync() {
+        if (this.client.requiredGlobalQuery() == null) {
+            throw new IllegalArgumentException("Parameter this.client.requiredGlobalQuery() is required and cannot be null.");
+        }
+        return service.getRequiredGlobalQuery(this.client.requiredGlobalQuery())
+            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Error>>>() {
+                @Override
+                public Observable<ServiceResponse<Error>> call(Response<ResponseBody> response) {
+                    try {
+                        ServiceResponse<Error> clientResponse = getRequiredGlobalQueryDelegate(response);
+                        return Observable.just(clientResponse);
+                    } catch (Throwable t) {
+                        return Observable.error(t);
+                    }
+                }
+            });
     }
 
     private ServiceResponse<Error> getRequiredGlobalQueryDelegate(Response<ResponseBody> response) throws ErrorException, IOException, IllegalArgumentException {
@@ -510,39 +629,54 @@ public final class ImplicitsImpl implements Implicits {
     /**
      * Test implicitly optional query parameter.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the Error object wrapped in {@link ServiceResponse} if successful.
+     * @return the Error object if successful.
      */
-    public ServiceResponse<Error> getOptionalGlobalQuery() throws ErrorException, IOException {
-        Call<ResponseBody> call = service.getOptionalGlobalQuery(this.client.optionalGlobalQuery());
-        return getOptionalGlobalQueryDelegate(call.execute());
+    public Error getOptionalGlobalQuery() {
+        return getOptionalGlobalQueryWithServiceResponseAsync().toBlocking().single().getBody();
     }
 
     /**
      * Test implicitly optional query parameter.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
-     * @return the {@link Call} object
+     * @return the {@link ServiceCall} object
      */
-    public ServiceCall getOptionalGlobalQueryAsync(final ServiceCallback<Error> serviceCallback) throws IllegalArgumentException {
-        if (serviceCallback == null) {
-            throw new IllegalArgumentException("ServiceCallback is required for async calls.");
-        }
-        Call<ResponseBody> call = service.getOptionalGlobalQuery(this.client.optionalGlobalQuery());
-        final ServiceCall serviceCall = new ServiceCall(call);
-        call.enqueue(new ServiceResponseCallback<Error>(serviceCallback) {
+    public ServiceCall<Error> getOptionalGlobalQueryAsync(final ServiceCallback<Error> serviceCallback) {
+        return ServiceCall.create(getOptionalGlobalQueryWithServiceResponseAsync(), serviceCallback);
+    }
+
+    /**
+     * Test implicitly optional query parameter.
+     *
+     * @return the observable to the Error object
+     */
+    public Observable<Error> getOptionalGlobalQueryAsync() {
+        return getOptionalGlobalQueryWithServiceResponseAsync().map(new Func1<ServiceResponse<Error>, Error>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    serviceCallback.success(getOptionalGlobalQueryDelegate(response));
-                } catch (ErrorException | IOException exception) {
-                    serviceCallback.failure(exception);
-                }
+            public Error call(ServiceResponse<Error> response) {
+                return response.getBody();
             }
         });
-        return serviceCall;
+    }
+
+    /**
+     * Test implicitly optional query parameter.
+     *
+     * @return the observable to the Error object
+     */
+    public Observable<ServiceResponse<Error>> getOptionalGlobalQueryWithServiceResponseAsync() {
+        return service.getOptionalGlobalQuery(this.client.optionalGlobalQuery())
+            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Error>>>() {
+                @Override
+                public Observable<ServiceResponse<Error>> call(Response<ResponseBody> response) {
+                    try {
+                        ServiceResponse<Error> clientResponse = getOptionalGlobalQueryDelegate(response);
+                        return Observable.just(clientResponse);
+                    } catch (Throwable t) {
+                        return Observable.error(t);
+                    }
+                }
+            });
     }
 
     private ServiceResponse<Error> getOptionalGlobalQueryDelegate(Response<ResponseBody> response) throws ErrorException, IOException {

@@ -24,20 +24,37 @@
 {
 @EmptyLine
 }
+@if (Model.ConstantParameters.Any())
+{
+	foreach (var parameter in Model.ConstantParameters)
+	{
+        @:@(parameter.Name) = @(parameter.DefaultValue)
+	}
+@EmptyLine
+}
         def internal_paging(next_link=None, raw=False):
 @EmptyLine
             if not next_link:
                 # Construct URL
                 url = '@(Model.Url)'
-                @(Model.BuildUrlPath("url"))
+                @(Model.BuildUrlPath("url", Model.LogicalParameters))
 @EmptyLine
                 # Construct parameters
                 query_parameters = {}
-                @(Model.BuildUrlQuery("query_parameters"))
+                @(Model.BuildUrlQuery("query_parameters", Model.LogicalParameters))
 @EmptyLine
             else:
-                url = next_link
+@if (Model.PagingURL != null)
+{
+                @:url = '@(Model.PagingURL)'
+}
+else
+{
+                @:url = next_link
+}
+                @(Model.BuildUrlPath("url", Model.PagingParameters))
                 query_parameters = {}
+                @(Model.BuildUrlQuery("query_parameters", Model.PagingParameters))
 @EmptyLine
             # Construct headers
             header_parameters = {}

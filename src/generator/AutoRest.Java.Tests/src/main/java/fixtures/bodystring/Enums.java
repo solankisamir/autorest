@@ -14,9 +14,8 @@ import com.microsoft.rest.ServiceCall;
 import com.microsoft.rest.ServiceCallback;
 import com.microsoft.rest.ServiceResponse;
 import fixtures.bodystring.models.Colors;
-import fixtures.bodystring.models.ErrorException;
 import fixtures.bodystring.models.RefColorConstant;
-import java.io.IOException;
+import rx.Observable;
 
 /**
  * An instance of this class provides access to all the operations defined
@@ -26,118 +25,184 @@ public interface Enums {
     /**
      * Get enum value 'red color' from enumeration of 'red color', 'green-color', 'blue_color'.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the Colors object wrapped in {@link ServiceResponse} if successful.
+     * @return the Colors object if successful.
      */
-    ServiceResponse<Colors> getNotExpandable() throws ErrorException, IOException;
+    Colors getNotExpandable();
 
     /**
      * Get enum value 'red color' from enumeration of 'red color', 'green-color', 'blue_color'.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall getNotExpandableAsync(final ServiceCallback<Colors> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Colors> getNotExpandableAsync(final ServiceCallback<Colors> serviceCallback);
+
+    /**
+     * Get enum value 'red color' from enumeration of 'red color', 'green-color', 'blue_color'.
+     *
+     * @return the observable to the Colors object
+     */
+    Observable<Colors> getNotExpandableAsync();
+
+    /**
+     * Get enum value 'red color' from enumeration of 'red color', 'green-color', 'blue_color'.
+     *
+     * @return the observable to the Colors object
+     */
+    Observable<ServiceResponse<Colors>> getNotExpandableWithServiceResponseAsync();
 
     /**
      * Sends value 'red color' from enumeration of 'red color', 'green-color', 'blue_color'.
      *
      * @param stringBody Possible values include: 'red color', 'green-color', 'blue_color'
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @throws IllegalArgumentException exception thrown from invalid parameters
-     * @return the {@link ServiceResponse} object if successful.
      */
-    ServiceResponse<Void> putNotExpandable(Colors stringBody) throws ErrorException, IOException, IllegalArgumentException;
+    void putNotExpandable(Colors stringBody);
 
     /**
      * Sends value 'red color' from enumeration of 'red color', 'green-color', 'blue_color'.
      *
      * @param stringBody Possible values include: 'red color', 'green-color', 'blue_color'
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall putNotExpandableAsync(Colors stringBody, final ServiceCallback<Void> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Void> putNotExpandableAsync(Colors stringBody, final ServiceCallback<Void> serviceCallback);
+
+    /**
+     * Sends value 'red color' from enumeration of 'red color', 'green-color', 'blue_color'.
+     *
+     * @param stringBody Possible values include: 'red color', 'green-color', 'blue_color'
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<Void> putNotExpandableAsync(Colors stringBody);
+
+    /**
+     * Sends value 'red color' from enumeration of 'red color', 'green-color', 'blue_color'.
+     *
+     * @param stringBody Possible values include: 'red color', 'green-color', 'blue_color'
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<ServiceResponse<Void>> putNotExpandableWithServiceResponseAsync(Colors stringBody);
 
     /**
      * Get enum value 'red color' from enumeration of 'red color', 'green-color', 'blue_color'.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the Colors object wrapped in {@link ServiceResponse} if successful.
+     * @return the Colors object if successful.
      */
-    ServiceResponse<Colors> getReferenced() throws ErrorException, IOException;
+    Colors getReferenced();
 
     /**
      * Get enum value 'red color' from enumeration of 'red color', 'green-color', 'blue_color'.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall getReferencedAsync(final ServiceCallback<Colors> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Colors> getReferencedAsync(final ServiceCallback<Colors> serviceCallback);
+
+    /**
+     * Get enum value 'red color' from enumeration of 'red color', 'green-color', 'blue_color'.
+     *
+     * @return the observable to the Colors object
+     */
+    Observable<Colors> getReferencedAsync();
+
+    /**
+     * Get enum value 'red color' from enumeration of 'red color', 'green-color', 'blue_color'.
+     *
+     * @return the observable to the Colors object
+     */
+    Observable<ServiceResponse<Colors>> getReferencedWithServiceResponseAsync();
 
     /**
      * Sends value 'red color' from enumeration of 'red color', 'green-color', 'blue_color'.
      *
      * @param enumStringBody Possible values include: 'red color', 'green-color', 'blue_color'
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @throws IllegalArgumentException exception thrown from invalid parameters
-     * @return the {@link ServiceResponse} object if successful.
      */
-    ServiceResponse<Void> putReferenced(Colors enumStringBody) throws ErrorException, IOException, IllegalArgumentException;
+    void putReferenced(Colors enumStringBody);
 
     /**
      * Sends value 'red color' from enumeration of 'red color', 'green-color', 'blue_color'.
      *
      * @param enumStringBody Possible values include: 'red color', 'green-color', 'blue_color'
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall putReferencedAsync(Colors enumStringBody, final ServiceCallback<Void> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Void> putReferencedAsync(Colors enumStringBody, final ServiceCallback<Void> serviceCallback);
 
     /**
-     * Get value 'green-color' from the constant.
+     * Sends value 'red color' from enumeration of 'red color', 'green-color', 'blue_color'.
      *
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @return the RefColorConstant object wrapped in {@link ServiceResponse} if successful.
-     */
-    ServiceResponse<RefColorConstant> getReferencedConstant() throws ErrorException, IOException;
-
-    /**
-     * Get value 'green-color' from the constant.
-     *
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
-     * @return the {@link ServiceCall} object
-     */
-    ServiceCall getReferencedConstantAsync(final ServiceCallback<RefColorConstant> serviceCallback) throws IllegalArgumentException;
-
-    /**
-     * Sends value 'green-color' from a constant.
-     *
-     * @param enumStringBody the RefColorConstant value
-     * @throws ErrorException exception thrown from REST call
-     * @throws IOException exception thrown from serialization/deserialization
-     * @throws IllegalArgumentException exception thrown from invalid parameters
+     * @param enumStringBody Possible values include: 'red color', 'green-color', 'blue_color'
      * @return the {@link ServiceResponse} object if successful.
      */
-    ServiceResponse<Void> putReferencedConstant(RefColorConstant enumStringBody) throws ErrorException, IOException, IllegalArgumentException;
+    Observable<Void> putReferencedAsync(Colors enumStringBody);
+
+    /**
+     * Sends value 'red color' from enumeration of 'red color', 'green-color', 'blue_color'.
+     *
+     * @param enumStringBody Possible values include: 'red color', 'green-color', 'blue_color'
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<ServiceResponse<Void>> putReferencedWithServiceResponseAsync(Colors enumStringBody);
+
+    /**
+     * Get value 'green-color' from the constant.
+     *
+     * @return the RefColorConstant object if successful.
+     */
+    RefColorConstant getReferencedConstant();
+
+    /**
+     * Get value 'green-color' from the constant.
+     *
+     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @return the {@link ServiceCall} object
+     */
+    ServiceCall<RefColorConstant> getReferencedConstantAsync(final ServiceCallback<RefColorConstant> serviceCallback);
+
+    /**
+     * Get value 'green-color' from the constant.
+     *
+     * @return the observable to the RefColorConstant object
+     */
+    Observable<RefColorConstant> getReferencedConstantAsync();
+
+    /**
+     * Get value 'green-color' from the constant.
+     *
+     * @return the observable to the RefColorConstant object
+     */
+    Observable<ServiceResponse<RefColorConstant>> getReferencedConstantWithServiceResponseAsync();
+
+    /**
+     * Sends value 'green-color' from a constant.
+     *
+     * @param enumStringBody the RefColorConstant value
+     */
+    void putReferencedConstant(RefColorConstant enumStringBody);
 
     /**
      * Sends value 'green-color' from a constant.
      *
      * @param enumStringBody the RefColorConstant value
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @throws IllegalArgumentException thrown if callback is null
      * @return the {@link ServiceCall} object
      */
-    ServiceCall putReferencedConstantAsync(RefColorConstant enumStringBody, final ServiceCallback<Void> serviceCallback) throws IllegalArgumentException;
+    ServiceCall<Void> putReferencedConstantAsync(RefColorConstant enumStringBody, final ServiceCallback<Void> serviceCallback);
+
+    /**
+     * Sends value 'green-color' from a constant.
+     *
+     * @param enumStringBody the RefColorConstant value
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<Void> putReferencedConstantAsync(RefColorConstant enumStringBody);
+
+    /**
+     * Sends value 'green-color' from a constant.
+     *
+     * @param enumStringBody the RefColorConstant value
+     * @return the {@link ServiceResponse} object if successful.
+     */
+    Observable<ServiceResponse<Void>> putReferencedConstantWithServiceResponseAsync(RefColorConstant enumStringBody);
 
 }

@@ -75,7 +75,7 @@ namespace AutoRest.Swagger
             ServiceDefinition = SwaggerParser.Load(Settings.Input, Settings.FileSystem);
 
             // Look for semantic errors and warnings in the document.
-            var validator = new RecursiveObjectValidator();
+            var validator = new RecursiveObjectValidator(PropertyNameResolver.JsonName);
             messages = validator.GetValidationExceptions(ServiceDefinition).ToList();
 
             Logger.LogInfo(Resources.GeneratingClient);
@@ -150,6 +150,40 @@ namespace AutoRest.Swagger
             return ServiceClient;
         }
 
+        /// <summary>
+        /// Copares two versions of the same service specification.
+        /// </summary>
+        /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling")]
+        public override IEnumerable<ComparisonMessage> Compare()
+        {
+            Logger.LogInfo(Resources.ParsingSwagger);
+            if (string.IsNullOrWhiteSpace(Settings.Input) || string.IsNullOrWhiteSpace(Settings.Previous))
+            {
+                throw ErrorManager.CreateError(Resources.InputRequired);
+            }
+
+            var oldDefintion = SwaggerParser.Load(Settings.Previous, Settings.FileSystem);
+            var newDefintion = SwaggerParser.Load(Settings.Input, Settings.FileSystem);
+
+            var context = new ComparisonContext(oldDefintion, newDefintion);
+
+            // Look for semantic errors and warnings in the new document.
+            var validator = new RecursiveObjectValidator(PropertyNameResolver.JsonName);
+            var validationMessages = validator.GetValidationExceptions(newDefintion).ToList();
+
+            // Only compare versions if the new version is correct.
+            var comparisonMessages = 
+                !validationMessages.Any(m => m.Severity > LogEntrySeverity.Error) ? 
+                newDefintion.Compare(context, oldDefintion) : 
+                Enumerable.Empty<ComparisonMessage>();
+
+            return validationMessages
+                .Select(msg => 
+                    new ComparisonMessage(new MessageTemplate { Id = 0, Message = msg.Message }, string.Join("/", msg.Path), msg.Severity))
+                .Concat(comparisonMessages);
+        }
+
         private void UpdateSettings()
         {
             if (ServiceDefinition.Info.CodeGenerationSettings != null)
@@ -195,6 +229,7 @@ namespace AutoRest.Swagger
                 ServiceClient.Name = Settings.ClientName;
             }
             ServiceClient.Namespace = Settings.Namespace;
+            ServiceClient.ModelsName = Settings.ModelsName;
             ServiceClient.ApiVersion = ServiceDefinition.Info.Version;
             ServiceClient.Documentation = ServiceDefinition.Info.Description;
             if (ServiceDefinition.Schemes == null || ServiceDefinition.Schemes.Count != 1)
@@ -224,6 +259,12 @@ namespace AutoRest.Swagger
                 string[] splitReference = reference.Split(new[] { '#' }, StringSplitOptions.RemoveEmptyEntries);
                 Debug.Assert(splitReference.Length == 2);
                 string filePath = splitReference[0];
+                // Make sure the filePath is either an absolute uri, or a rooted path
+                if (!FileSystem.IsCompletePath(filePath))
+                {
+                    // Otherwise, root it from the current path
+                    filePath = FileSystem.MakePathRooted(Settings.InputFolder, filePath);
+                }
                 string externalDefinition = Settings.FileSystem.ReadFileAsText(filePath);
                 ServiceDefinition external = SwaggerParser.Parse(externalDefinition);
                 external.Definitions.ForEach(d => ServiceDefinition.Definitions[d.Key] = d.Value);

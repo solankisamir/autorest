@@ -51,7 +51,7 @@ namespace AutoRest.Java.TypeModels
             }
         }
 
-        public ITypeModel BodyClientType
+        public virtual ITypeModel BodyClientType
         {
             get
             {
@@ -136,18 +136,31 @@ namespace AutoRest.Java.TypeModels
             }
         }
 
+        public string WrapResponse(string responseTypeString)
+        {
+            if (Headers == null)
+            {
+                return string.Format(CultureInfo.InvariantCulture, "{0}<{1}>", ClientResponseType, responseTypeString);
+            }
+            else
+            {
+                return string.Format(CultureInfo.InvariantCulture, "{0}<{1}, {2}>", ClientResponseType, responseTypeString, GenericHeaderClientTypeString);
+            }
+        }
+
         public string ClientResponseTypeString
         {
             get
             {
-                if (Headers == null)
-                {
-                    return string.Format(CultureInfo.InvariantCulture, "{0}<{1}>", ClientResponseType, GenericBodyClientTypeString);
-                }
-                else
-                {
-                    return string.Format(CultureInfo.InvariantCulture, "{0}<{1}, {2}>", ClientResponseType, GenericBodyClientTypeString, GenericHeaderClientTypeString);
-                }
+                return WrapResponse(GenericBodyClientTypeString);
+            }
+        }
+
+        public virtual string ObservableClientResponseTypeString
+        {
+            get
+            {
+                return ClientResponseTypeString;
             }
         }
 
@@ -182,6 +195,38 @@ namespace AutoRest.Java.TypeModels
             }
         }
 
+        public string GenericBodyClientTypeStringWrapped
+        {
+            get
+            {
+                return WrapResponse(GenericBodyClientTypeString);
+            }
+        }
+
+        public virtual string ServiceCallGenericParameterString
+        {
+            get
+            {
+                return GenericBodyClientTypeString;
+            }
+        }
+
+        public virtual string ServiceResponseGenericParameterString
+        {
+            get
+            {
+                return ServiceCallGenericParameterString;
+            }
+        }
+
+        public string ServiceResponseGenericParameterStringWrapped
+        {
+            get
+            {
+                return WrapResponse(ServiceResponseGenericParameterString);
+            }
+        }
+
         public virtual string GenericHeaderClientTypeString
         {
             get
@@ -198,12 +243,43 @@ namespace AutoRest.Java.TypeModels
             }
         }
 
+        public string GenericBodyWireTypeStringWrapped
+        {
+            get
+            {
+                return WrapResponse(GenericBodyWireTypeString);
+            }
+        }
+
         public virtual string GenericHeaderWireTypeString
         {
             get
             {
                 return HeaderWireType.InstanceType().Name;
             }
+        }
+
+        public virtual string SequenceElementTypeString
+        {
+            get
+            {
+                SequenceTypeModel sequenceType = (SequenceTypeModel) Body;
+                return sequenceType != null ? sequenceType.ElementTypeModel.InstanceType().Name : "Void";
+            }
+        }
+
+        public string ServiceResponseCreation(string serviceResponse, string body, string response)
+        {
+            string format;
+            if (Headers == null)
+            {
+                format = "new {0}({1}, {2}.getResponse())";
+            }
+            else
+            {
+                format = "new {0}({1}, {2}.getHeaders(), {2}.getResponse())";
+            }
+            return string.Format(format, serviceResponse, body, response);
         }
 
         #endregion

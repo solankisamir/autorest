@@ -92,7 +92,7 @@ class AutoRestValidationTest(object):
         :param operation_config: :ref:`Operation configuration
          overrides<msrest:optionsforoperations>`.
         :rtype: :class:`Product
-         <fixtures.acceptancetestsvalidation.models.Product>`
+         <Fixtures.AcceptanceTestsValidation.models.Product>`
         :rtype: :class:`ClientRawResponse<msrest.pipeline.ClientRawResponse>`
          if raw=true
         """
@@ -144,14 +144,14 @@ class AutoRestValidationTest(object):
         :type id: int
         :param body:
         :type body: :class:`Product
-         <fixtures.acceptancetestsvalidation.models.Product>`
+         <Fixtures.AcceptanceTestsValidation.models.Product>`
         :param dict custom_headers: headers that will be added to the request
         :param bool raw: returns the direct response alongside the
          deserialized response
         :param operation_config: :ref:`Operation configuration
          overrides<msrest:optionsforoperations>`.
         :rtype: :class:`Product
-         <fixtures.acceptancetestsvalidation.models.Product>`
+         <Fixtures.AcceptanceTestsValidation.models.Product>`
         :rtype: :class:`ClientRawResponse<msrest.pipeline.ClientRawResponse>`
          if raw=true
         """
@@ -200,11 +200,9 @@ class AutoRestValidationTest(object):
         return deserialized
 
     def get_with_constant_in_path(
-            self, constant_param="constant", custom_headers=None, raw=False, **operation_config):
+            self, custom_headers=None, raw=False, **operation_config):
         """
 
-        :param constant_param:
-        :type constant_param: str
         :param dict custom_headers: headers that will be added to the request
         :param bool raw: returns the direct response alongside the
          deserialized response
@@ -214,6 +212,8 @@ class AutoRestValidationTest(object):
         :rtype: :class:`ClientRawResponse<msrest.pipeline.ClientRawResponse>`
          if raw=true
         """
+        constant_param = "constant"
+
         # Construct URL
         url = '/validation/constantsInPath/{constantParam}/value'
         path_format_arguments = {
@@ -242,24 +242,24 @@ class AutoRestValidationTest(object):
             return client_raw_response
 
     def post_with_constant_in_body(
-            self, constant_param="constant", body=None, custom_headers=None, raw=False, **operation_config):
+            self, body=None, custom_headers=None, raw=False, **operation_config):
         """
 
-        :param constant_param:
-        :type constant_param: str
         :param body:
         :type body: :class:`Product
-         <fixtures.acceptancetestsvalidation.models.Product>`
+         <Fixtures.AcceptanceTestsValidation.models.Product>`
         :param dict custom_headers: headers that will be added to the request
         :param bool raw: returns the direct response alongside the
          deserialized response
         :param operation_config: :ref:`Operation configuration
          overrides<msrest:optionsforoperations>`.
         :rtype: :class:`Product
-         <fixtures.acceptancetestsvalidation.models.Product>`
+         <Fixtures.AcceptanceTestsValidation.models.Product>`
         :rtype: :class:`ClientRawResponse<msrest.pipeline.ClientRawResponse>`
          if raw=true
         """
+        constant_param = "constant"
+
         # Construct URL
         url = '/validation/constantsInPath/{constantParam}/value'
         path_format_arguments = {
